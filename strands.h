@@ -69,10 +69,39 @@ struct LetterNode {
 };
 
 struct PuzzleWord {
+	
 	string word;
-	set<int> coordinates;
+	int ** coordinates;
+
+	inline static int width;
+	inline static int height;
+
+	PuzzleWord();
+	PuzzleWord( PuzzleWord & other );
+
+	void move( PuzzleWord & other );
+
+	PuzzleWord& operator=(PuzzleWord& other);
+	PuzzleWord& operator=(PuzzleWord&& other);
+
+	PuzzleWord( string w, int ** coor_original );
+	~PuzzleWord();
+	
+	friend void swap( PuzzleWord & a, PuzzleWord & b );
+
 	bool overlap ( PuzzleWord & other );
+	PuzzleWord( PuzzleWord && other );
+
+
+
 };
+
+bool operator < ( PuzzleWord & lhs, PuzzleWord & rhs );
+
+/*
+int PuzzleWord::width;
+int PuzzleWord::height;
+*/
 
 void solve_strands( StrandsBoard & board, set<string> & words, LetterNode & wordtree );
 void solve_strands_new_word ( StrandsBoard & board, set<string> & words, LetterNode & wordtree, int chars_used = 0 );
@@ -80,7 +109,7 @@ void solve_strands_old_word( StrandsBoard & board, set<string> & words, LetterNo
 
 void get_words( set<string> & words, LetterNode & ln );
 
-void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree, char * word_str, set<int> & coors, int x, int y, int word_len = 0 );
+void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree, char * word_str, vector<int> & coors, int x, int y, int word_len = 0 );
 
 void find_all_words( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree );
 

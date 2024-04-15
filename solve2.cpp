@@ -1,98 +1,10 @@
 #include "strands.h"
 
-PuzzleWord::PuzzleWord() {
-	coordinates = nullptr;
-}
-
-
-PuzzleWord::PuzzleWord( string w, int ** coor_original ) {
-
-	word = w;
-
-	coordinates = alloc_2d_arr<int> ( width, height, 0 );
-	if( coordinates == nullptr ) {
-		std::cerr << "Failed to allocate memory\n";
-		exit ( 1 );
-		return;
-	}
-
-	memcpy( coordinates[0], coor_original[0], width * height * sizeof( int ) );
-
-}
-
-PuzzleWord::PuzzleWord( PuzzleWord & other ) {
-	word = other.word;
-	coordinates = alloc_2d_arr<int> ( width, height, 0 );
-	memcpy( coordinates[0], other.coordinates[0], width * height * sizeof(int) );
-}
-
-
-PuzzleWord::PuzzleWord( PuzzleWord && other ) {
-	word.swap( other.word );
-	coordinates = other.coordinates;
-	other.coordinates = nullptr;
-}
-
-
-void swap( PuzzleWord & a, PuzzleWord & b ) {
-	a.word.swap( b.word );
-	swap( a.coordinates, b.coordinates );
-}
-
-PuzzleWord& PuzzleWord::operator=(PuzzleWord& other) {
-	word = other.word;
-	coordinates = alloc_2d_arr<int> ( width, height, 0 );
-	memcpy( coordinates[0], other.coordinates[0], width * height * sizeof(int) );
-	return *this;
-}
-
-PuzzleWord& PuzzleWord::operator=(PuzzleWord&& other) {
-	word.swap( other.word );
-	coordinates = other.coordinates;
-	other.coordinates = nullptr;
-	return *this;
-}
-
-
-PuzzleWord::~PuzzleWord() {
-	//std::cout << "deconstructor called\n";
-	free_2d( coordinates );
-}
-
-bool PuzzleWord::overlap( PuzzleWord & other ) {
-	/*
-	for( int y = 0; y < height; y++ ) {
-		for ( int x = 0; x < width; x++ ) {
-			std::cout << coordinates[y][x] << " ";
-		}
-		std::cout << endl;
-	}
-	std::cout << "-\n";
-	for( int y = 0; y < height; y++ ) {
-		for ( int x = 0; x < width; x++ ) {
-			std::cout << other.coordinates[y][x] << " ";
-		}
-		std::cout << endl;
-	}
-	cin.get();
-	*/
-	for ( int y = 0; y < height; y++ ) {
-		for ( int x = 0; x < width; x++ ) {
-			int c1 = coordinates[y][x];
-			int c2 = other.coordinates[y][x];
-			if ( c1 != 0 && c2 != 0 ) return true;
-		}
-	}
-	return false;
-}
-
 void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree, char * word_str, int ** coors, int x, int y, int word_len ) {
 
 	// if we are out of bounds or if the word is not a prefix of any known word,
 	// we return
 	if ( !board.in_bounds( x, y ) || board.used[y][x] || !prefix_tree.contains( word_str ) ) return;
-
-	int lin_coor = board.linearize_coor( x, y );
 
 	word_str[ word_len ] = board.board[y][x];
 	word_len++;
@@ -202,7 +114,7 @@ void find_solution_from_words( vector<PuzzleWord> & found_words, StrandsBoard & 
 	vector<int> indicies;
 	indicies.reserve( found_words.size() );
 	// sort found words by length
-	sort( found_words.begin(), found_words.end(), []( PuzzleWord & a, PuzzleWord & b ) { return a.word.size() > b.word.size(); } );
+	sort( found_words.begin(), found_words.end() );
 
 	int chars_used = 0;
 	for( int y = 0; y < board.height; y++ )
