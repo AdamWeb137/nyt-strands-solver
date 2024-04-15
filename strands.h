@@ -10,6 +10,8 @@
 #include <fstream>
 #include <algorithm>
 #include <cctype>
+#include <limits>
+#include <iomanip>
 
 using namespace std;
 
@@ -60,12 +62,15 @@ struct StrandsBoard {
 
 };
 
+#define LETTER_NODE_MAX 27
 struct LetterNode {
-	LetterNode * children [ 256 ];
+	LetterNode * children [ LETTER_NODE_MAX ];
 	LetterNode();
 	~LetterNode();
 	bool contains( string word );
 	void insert( string word );
+	static int char_to_index( char c );
+	LetterNode * & operator []( char c );
 };
 
 struct PuzzleWord {
@@ -90,6 +95,7 @@ struct PuzzleWord {
 	friend void swap( PuzzleWord & a, PuzzleWord & b );
 
 	bool overlap ( PuzzleWord & other );
+	bool total_overlap ( bool ** coors );
 	PuzzleWord( PuzzleWord && other );
 
 
@@ -113,8 +119,21 @@ void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard &
 
 void find_all_words( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree );
 
-void find_solution_from_words( vector<PuzzleWord> & found_words, StrandsBoard & board );
+void find_solution_from_words( vector<PuzzleWord> & found_words, StrandsBoard & board, vector<vector<int>> & solutions );
 
-void find_solution_from_words_rec( vector<PuzzleWord> & found_words, StrandsBoard & board, vector<int> & indicies, int total_chars, int & depth, int max_depth = 0 );
+void find_solution_from_words_rec( vector<PuzzleWord> & found_words, StrandsBoard & board, vector<vector<int>> & solutions, vector<int> & indicies, int total_chars, int & depth, int max_depth = 0 );
+
+int get_valid_int( const char * prompt_message, const char * error_message );
+
+bool attempt_valid_int( int & result );
+bool get_board( vector<string> & board_string, int width, int height );
+void find_word_start( PuzzleWord & pw, int & startx, int & starty );
+void print_puzzle_word( PuzzleWord & pw );
+void print_words( vector<PuzzleWord> & found_words );
+void print_solutions( vector<PuzzleWord> & found_words, vector<vector<int>> & solutions );
+void menu();
+
+void find_hint_matches( vector<PuzzleWord> & found_words, bool ** hint_coors, vector<PuzzleWord> & matching );
+void decramble_hint( vector<PuzzleWord> & found_words );
 
 #endif

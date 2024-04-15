@@ -60,22 +60,21 @@ void find_all_words( vector<PuzzleWord> & found_words, StrandsBoard & board, set
 		for ( int x = 0; x < board.width; x++ )
 			find_all_words_from_point( found_words, board, dictionary, prefix_tree, word_str, coors, x, y, 0 );
 
+	// sort the found words by length
+	sort( found_words.begin(), found_words.end() );
+
 	delete [] word_str;
 	free_2d<int>( coors );
 
 }
 
-void find_solution_from_words_rec( vector<PuzzleWord> & found_words, StrandsBoard & board, vector<int> & indicies, int total_chars, int & depth, int max_depth ) {
+void find_solution_from_words_rec( vector<PuzzleWord> & found_words, StrandsBoard & board, vector<vector<int>> & solutions, vector<int> & indicies, int total_chars, int & depth, int max_depth ) {
 	
 	// if we have searched too long or we have used too many characters
 	if( depth >= max_depth || total_chars > board.size() ) return;
-	//if( total_chars > board.size() ) return;
 
 	if( total_chars == board.size() ) {
-		std::cout << "found solution!\n-----\n";
-		for ( auto i : indicies ) 
-			std::cout << found_words[i].word << "\n";
-		std::cout << depth << "\n";
+		solutions.emplace_back( indicies );
 		return;
 	}
 
@@ -100,7 +99,7 @@ void find_solution_from_words_rec( vector<PuzzleWord> & found_words, StrandsBoar
 		indicies.push_back(i);
 
 		depth++;
-		find_solution_from_words_rec( found_words, board, indicies, total_chars + static_cast<int>( found_words[i].word.size() ), depth, max_depth );
+		find_solution_from_words_rec( found_words, board, solutions, indicies, total_chars + static_cast<int>( found_words[i].word.size() ), depth, max_depth );
 
 		// remove word from solution list
 		indicies.pop_back();
@@ -109,12 +108,10 @@ void find_solution_from_words_rec( vector<PuzzleWord> & found_words, StrandsBoar
 
 }
 
-void find_solution_from_words( vector<PuzzleWord> & found_words, StrandsBoard & board ) {
+void find_solution_from_words( vector<PuzzleWord> & found_words, StrandsBoard & board, vector<vector<int>> & solutions ) {
 
 	vector<int> indicies;
 	indicies.reserve( found_words.size() );
-	// sort found words by length
-	sort( found_words.begin(), found_words.end() );
 
 	int chars_used = 0;
 	for( int y = 0; y < board.height; y++ )
@@ -122,6 +119,11 @@ void find_solution_from_words( vector<PuzzleWord> & found_words, StrandsBoard & 
 			chars_used += static_cast<int>( board.used[y][x] );
 
 	int recursion_call_number = 0;
-	find_solution_from_words_rec( found_words, board, indicies, chars_used, recursion_call_number, int( 1e6 ) );
-	std::cout << recursion_call_number << "\n";
+	find_solution_from_words_rec( found_words, board, solutions, indicies, chars_used, recursion_call_number, int( 1e6 ) );
+
+}
+
+void find_hint_matches( vector<PuzzleWord> & found_words, bool ** coors, vector<PuzzleWord> & matching ) {
+	for ( auto & pw : found_words )
+		if( pw.total_overlap( coors ) ) matching.emplace_back( pw );
 }

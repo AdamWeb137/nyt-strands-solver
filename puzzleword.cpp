@@ -69,6 +69,17 @@ bool PuzzleWord::overlap( PuzzleWord & other ) {
 	return false;
 }
 
+bool PuzzleWord::total_overlap ( bool ** coors ) {
+	for ( int y = 0; y < height; y++ ) {
+		for ( int x = 0; x < width; x++ ) {
+			int c1 = coordinates[y][x] ? 1 : 0;
+			int c2 = coors[y][x] ? 1 : 0;
+			if ( c1 != c2 ) return false;
+		}
+	}
+	return true;
+}
+
 bool operator < ( PuzzleWord & lhs, PuzzleWord & rhs ) {
 	return lhs.word.size() > rhs.word.size();
 }

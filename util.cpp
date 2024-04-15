@@ -1,7 +1,16 @@
 #include "strands.h"
 
+int LetterNode::char_to_index( char c ) {
+	if( c > 'z' || c < 'a' ) return LETTER_NODE_MAX - 1;
+	return static_cast<int> ( c - 'a' );
+}
+
+LetterNode * & LetterNode::operator []( char c ) {
+	return children[ char_to_index( c ) ];
+}
+
 LetterNode::LetterNode() {
-	memset( children, 0, 256 * sizeof( LetterNode * ) );
+	memset( children, 0, LETTER_NODE_MAX * sizeof( LetterNode * ) );
 }
 
 LetterNode::~LetterNode( ) {
@@ -12,8 +21,8 @@ LetterNode::~LetterNode( ) {
 bool LetterNode::contains( string word ) {
 	LetterNode * ln = this;
 	for( auto c : word ) {
-		if( ln->children[(int)c] == nullptr ) return false;
-		ln = ln->children[(int)c];
+		if( (*ln)[c] == nullptr ) return false;
+		ln = (*ln)[c];
 	}
 	return true;
 }
@@ -21,12 +30,12 @@ bool LetterNode::contains( string word ) {
 void LetterNode::insert( string word ) {
 	LetterNode * ln = this;
 	for( auto c : word ) {
-		if ( ln->children[(int)c] != nullptr ) {
-			ln = ln->children[(int)c];
+		if ( (*ln)[c] != nullptr ) {
+			ln = (*ln)[c];
 			continue;
 		}
 		LetterNode * nln = new (nothrow) LetterNode;
-		ln->children[(int)c] = nln;
+		(*ln)[c] = nln;
 		ln = nln;
 	}
 }
