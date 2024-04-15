@@ -104,23 +104,6 @@ TEST_CASE("find_all_words - todays") {
 	};
 	StrandsBoard sb(b);
 
-	int nirvana_points[][2] = {
-		{0,0},
-		{1,0},
-		{1,1},
-		{2,1},
-		{3,2},
-		{3,3},
-		{3,4},
-		{4,5},
-		{5,5}
-	};
-
-	/*
-	for( auto np : nirvana_points )
-		sb.used[ np[1] ][ np[0] ] = true;
-	*/
-
 	std::cout << "looking for words\n";
 	find_all_words( found, sb, words, wordtree );
 	std::cout << "finished looking for words\n";

@@ -42,6 +42,8 @@ void free_2d ( T * * & ptr  ) {
 }
 
 template char ** alloc_2d_arr<char>( int width, int height, char fill = '\0' );
+template int ** alloc_2d_arr<int>( int width, int height, int fill = 0 );
 template bool ** alloc_2d_arr<bool>( int width, int height, bool fill = false );
 template void free_2d<bool>( bool ** & ptr );
 template void free_2d<char>( char ** & ptr );
+template void free_2d<int>( int ** & ptr );

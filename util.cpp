@@ -44,12 +44,13 @@ void get_words( set<string> & words, LetterNode & ln ) {
 	while ( wfile >> temp ) {
 
 		// get rid of all punctuation
-		temp.erase( remove_if( temp.begin(), temp.end(), ispunct ), temp.end() );
+		temp.erase( remove_if( temp.begin(), temp.end(), ::ispunct ), temp.end() );
 		// lowercase the word
-		transform( temp.begin(), temp.end(), tolower );
+		for( auto & c : temp )
+			c = static_cast<char>( tolower( c ) );
 
 		// dont bother with a short word
-		if ( temp.size() < 4 ) continue;
+		if ( temp.size() < 3 ) continue;
 
 		// create a naively spelled plural of a word
 		// even if that does not make sense
@@ -57,7 +58,7 @@ void get_words( set<string> & words, LetterNode & ln ) {
 		words.insert( plural );
 		words.insert( temp );
 		ln.insert( plural );
-		ln.insert(temp);
+		ln.insert( temp );
 	}
 
 	wfile.close();
