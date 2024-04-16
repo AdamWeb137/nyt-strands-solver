@@ -69,8 +69,9 @@ void print_solutions( vector<PuzzleWord> & found_words, vector<vector<int>> & so
 
 	for( size_t i = 0; i < solutions.size(); i++ ) {
 		std::cout << "Possible solution # " << i << "\n";
-		for( auto i : solutions[i] ) {
-			print_puzzle_word( found_words[i] );
+		for( auto idx : solutions[i] ) {
+			std::cout << idx << " ";
+			print_puzzle_word( found_words[idx] );
 		}
 		std::cout << "\n";
 	}
@@ -95,7 +96,56 @@ void decramble_hint( vector<PuzzleWord> & found_words ) {
 
 	find_hint_matches( found_words, coors, solutions );
 
+	std::cout << "Candidates for the hint are: \n";
 	print_words( solutions );
+	std::cout << "\n";
+
+}
+
+void delete_word( vector<PuzzleWord> & found_words, StrandsBoard & board, string word ) {
+	vector<int> candidate_indicies;
+
+	for( size_t i = 0; i < found_words.size(); i++ )
+		if( found_words[i].word == word ) candidate_indicies.push_back( static_cast<int> ( i ) );
+
+	if( candidate_indicies.empty() ) {
+		std::cout << "There are no words on the board matching that\n";
+		return;
+	}
+
+	int choice;
+
+	if ( candidate_indicies.size() > 1 ) {
+		std::cout << "There are multiple instances of " << word << " on the board\n\n";
+		for( size_t i = 0; i < candidate_indicies.size(); i++ ) {
+			std::cout << "Location # " << i << "\n";
+			found_words[ candidate_indicies[i] ].print_coors( std::cout );
+			std::cout << "\n";
+		}
+		std::cout << "Please select one to delete: ";
+		cin >> choice;
+		std::cout << "\n";
+		if ( choice < 0 || choice > int( candidate_indicies.size() ) ) {
+			std::cout << "Invalid option\n\n";
+			return;
+		}
+
+	} else 
+		choice = 0;
+
+	for( int y = 0; y < board.height; y++ ) 
+		for( int x = 0; x < board.width; x++ ) 
+			if( found_words[ candidate_indicies[choice] ].coordinates[y][x] ) board.used[y][x] = true;
+
+
+	PuzzleWord pw = found_words[ candidate_indicies[choice] ];
+	for( auto it = found_words.begin(); it != found_words.end(); ) {
+		if( it->overlap( pw ) ) {
+			it = found_words.erase( it );
+		} else it++;
+	}
+
+	std::cout << "The word has been deleted\n\n";
 
 }
 
@@ -116,6 +166,8 @@ void menu() {
 		std::cout << "Enter the board with whitespace seperating each row\n";
 	} while ( !get_board( board_string, width, height ) );
 
+	std::cout << "\n";
+
 	set<string> dictionary;
 	LetterNode prefix_tree;
 	
@@ -130,26 +182,29 @@ void menu() {
 
 	int option = -1;
 
-	while( option != 4 ) {
+	while( option != 5 ) {
 
 		std::cout << "(1) - print all words in descending order of length\n"
 			<< "(2) - try to find solution\n"
 			<< "(3) - descramble a hint\n"
-			<< "(4) - exit\n";
+			<< "(4) - mark a word as used\n"
+			<< "(5) - exit\n";
 		std::cout << "Choose an option: ";
 		cin >> option;
 		std::cout << "\n";
 
+		string word_to_delete;
+
 		switch( option ) {
 			case 1:
 				print_words( found_words );
+				std::cout << "\n";
 				break;
 
 			case 2:
 
 				solutions.clear();
 				find_solution_from_words( found_words, board, solutions );
-
 				print_solutions( found_words, solutions );
 
 				break;
@@ -159,6 +214,15 @@ void menu() {
 				break;
 
 			case 4:
+
+				std::cout << "Type a word to mark as used: ";
+				cin >> word_to_delete;
+				std::cout << "\n";
+
+				delete_word( found_words, board, word_to_delete );
+				break;
+
+			case 5:
 				break;
 
 			default:

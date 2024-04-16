@@ -73,3 +73,13 @@ void get_words( set<string> & words, LetterNode & ln ) {
 	wfile.close();
 
 }
+
+void PuzzleWord::print_coors ( ostream & out ) {
+	out << right;
+	for( int y = 0; y < height; y++ ) {
+		for( int x = 0; x < width; x++ ) {
+			out << setw(3) << coordinates[y][x];
+		}
+		out << "\n";
+	}
+}

@@ -96,6 +96,7 @@ struct PuzzleWord {
 
 	bool overlap ( PuzzleWord & other );
 	bool total_overlap ( bool ** coors );
+	void print_coors ( ostream & out );
 	PuzzleWord( PuzzleWord && other );
 
 
@@ -135,5 +136,7 @@ void menu();
 
 void find_hint_matches( vector<PuzzleWord> & found_words, bool ** hint_coors, vector<PuzzleWord> & matching );
 void decramble_hint( vector<PuzzleWord> & found_words );
+
+void delete_word( vector<PuzzleWord> & found_words, StrandsBoard & board, string word );
 
 #endif
