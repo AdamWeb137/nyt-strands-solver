@@ -1,6 +1,6 @@
 #include "strands.h"
 
-void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree, char * word_str, int ** coors, int x, int y, int word_len ) {
+void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree, char * word_str, int ** coors, set<string> & already_found, int x, int y, int word_len ) {
 
 	// if we are out of bounds or if the word is not a prefix of any known word,
 	// we return
@@ -14,7 +14,27 @@ void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard &
 	// insert a found word if it is a solution
 	string curr_sol = string( word_str );
 	if ( word_len >= MIN_WORD_LEN && dictionary.contains( curr_sol ) ) {
-		found_words.emplace_back( curr_sol, coors );
+
+
+		int overlap = false;
+
+		// ensure we don't find two of the same word with the same letters in the same places
+		// however, it is fine if we find two of the same word but they share different shapes on the board
+		if( already_found.contains( curr_sol ) ) {
+			for( auto & pw : found_words ) {
+				if( pw.word == curr_sol && pw.total_overlap( coors ) ) {
+					overlap = true;
+					break;
+				}
+			}
+		}
+
+		if( !overlap ) {
+
+			found_words.emplace_back( curr_sol, coors );
+			already_found.insert( curr_sol );
+
+		}
 	}
 
 	int moves[][2] = {
@@ -29,7 +49,7 @@ void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard &
 	};
 
 	for( auto move : moves )
-		find_all_words_from_point( found_words, board, dictionary, prefix_tree, word_str, coors, x + move[0], y + move[1], word_len );
+		find_all_words_from_point( found_words, board, dictionary, prefix_tree, word_str, coors, already_found, x + move[0], y + move[1], word_len );
 
 	// mark the node as unvisited
 	word_len--;
@@ -46,6 +66,8 @@ void find_all_words( vector<PuzzleWord> & found_words, StrandsBoard & board, set
 	PuzzleWord::height = board.height;
 	PuzzleWord::width = board.width;
 
+	set<string> already_found;
+
 	int ** coors = alloc_2d_arr<int>( board.width, board.height, 0 );
 	if( coors == nullptr ) exit( 1 );
 
@@ -58,7 +80,7 @@ void find_all_words( vector<PuzzleWord> & found_words, StrandsBoard & board, set
 	// get all words starting from each place on the board
 	for( int y = 0; y < board.height; y++ )
 		for ( int x = 0; x < board.width; x++ )
-			find_all_words_from_point( found_words, board, dictionary, prefix_tree, word_str, coors, x, y, 0 );
+			find_all_words_from_point( found_words, board, dictionary, prefix_tree, word_str, coors, already_found, x, y, 0 );
 
 	// sort the found words by length
 	sort( found_words.begin(), found_words.end() );

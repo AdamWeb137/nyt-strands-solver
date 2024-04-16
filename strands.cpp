@@ -63,14 +63,13 @@ void print_words( vector<PuzzleWord> & found_words ) {
 void print_solutions( vector<PuzzleWord> & found_words, vector<vector<int>> & solutions ) {
 	
 	if( solutions.size() == 0 ) {
-		std::cout << "No solutions found\n";
+		std::cout << "No solutions found\n\n";
 		return;
 	}
 
 	for( size_t i = 0; i < solutions.size(); i++ ) {
 		std::cout << "Possible solution # " << i << "\n";
 		for( auto idx : solutions[i] ) {
-			std::cout << idx << " ";
 			print_puzzle_word( found_words[idx] );
 		}
 		std::cout << "\n";
@@ -163,7 +162,7 @@ void menu() {
 	vector<string> board_string;
 
 	do {
-		std::cout << "Enter the board with whitespace seperating each row\n";
+		std::cout << "Enter the board with whitespace seperating each row\n\n";
 	} while ( !get_board( board_string, width, height ) );
 
 	std::cout << "\n";
@@ -198,7 +197,7 @@ void menu() {
 		switch( option ) {
 			case 1:
 				print_words( found_words );
-				std::cout << "\n";
+				std::cout << "\nThere are a total of " << found_words.size() << " possible words left\n\n";
 				break;
 
 			case 2:
@@ -226,7 +225,7 @@ void menu() {
 				break;
 
 			default:
-				std::cout << "Improper option\n";
+				std::cout << "Improper option\n\n";
 				break;
 
 		}

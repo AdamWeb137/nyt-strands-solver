@@ -69,7 +69,8 @@ bool PuzzleWord::overlap( PuzzleWord & other ) {
 	return false;
 }
 
-bool PuzzleWord::total_overlap ( bool ** coors ) {
+template <typename T>
+bool PuzzleWord::total_overlap ( T ** coors ) {
 	for ( int y = 0; y < height; y++ ) {
 		for ( int x = 0; x < width; x++ ) {
 			int c1 = coordinates[y][x] ? 1 : 0;
@@ -79,6 +80,9 @@ bool PuzzleWord::total_overlap ( bool ** coors ) {
 	}
 	return true;
 }
+
+template bool PuzzleWord::total_overlap<int>( int ** coors ); 
+template bool PuzzleWord::total_overlap<bool>( bool ** coors ); 
 
 bool operator < ( PuzzleWord & lhs, PuzzleWord & rhs ) {
 	return lhs.word.size() > rhs.word.size();

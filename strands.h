@@ -83,21 +83,21 @@ struct PuzzleWord {
 
 	PuzzleWord();
 	PuzzleWord( PuzzleWord & other );
-
+	PuzzleWord( PuzzleWord && other );
 	void move( PuzzleWord & other );
-
 	PuzzleWord& operator=(PuzzleWord& other);
 	PuzzleWord& operator=(PuzzleWord&& other);
-
 	PuzzleWord( string w, int ** coor_original );
 	~PuzzleWord();
 	
 	friend void swap( PuzzleWord & a, PuzzleWord & b );
 
 	bool overlap ( PuzzleWord & other );
-	bool total_overlap ( bool ** coors );
+
+	template <typename T>
+	bool total_overlap ( T ** coors );
+
 	void print_coors ( ostream & out );
-	PuzzleWord( PuzzleWord && other );
 
 
 
@@ -110,13 +110,16 @@ int PuzzleWord::width;
 int PuzzleWord::height;
 */
 
+// solve.cpp approach (deprecated)
 void solve_strands( StrandsBoard & board, set<string> & words, LetterNode & wordtree );
 void solve_strands_new_word ( StrandsBoard & board, set<string> & words, LetterNode & wordtree, int chars_used = 0 );
 void solve_strands_old_word( StrandsBoard & board, set<string> & words, LetterNode & wordtree, int x, int y, int chars_used );
 
+
 void get_words( set<string> & words, LetterNode & ln );
 
-void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree, char * word_str, vector<int> & coors, int x, int y, int word_len = 0 );
+// solve2.cpp approach
+void find_all_words_from_point( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree, char * word_str, int ** coors, set<string> & already_found, int x, int y, int word_len = 0 );
 
 void find_all_words( vector<PuzzleWord> & found_words, StrandsBoard & board, set<string> & dictionary, LetterNode & prefix_tree );
 
@@ -124,14 +127,21 @@ void find_solution_from_words( vector<PuzzleWord> & found_words, StrandsBoard & 
 
 void find_solution_from_words_rec( vector<PuzzleWord> & found_words, StrandsBoard & board, vector<vector<int>> & solutions, vector<int> & indicies, int total_chars, int & depth, int max_depth = 0 );
 
+// main helpers
 int get_valid_int( const char * prompt_message, const char * error_message );
 
 bool attempt_valid_int( int & result );
+
 bool get_board( vector<string> & board_string, int width, int height );
+
 void find_word_start( PuzzleWord & pw, int & startx, int & starty );
+
 void print_puzzle_word( PuzzleWord & pw );
+
 void print_words( vector<PuzzleWord> & found_words );
+
 void print_solutions( vector<PuzzleWord> & found_words, vector<vector<int>> & solutions );
+
 void menu();
 
 void find_hint_matches( vector<PuzzleWord> & found_words, bool ** hint_coors, vector<PuzzleWord> & matching );
