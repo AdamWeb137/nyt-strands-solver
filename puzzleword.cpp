@@ -84,6 +84,10 @@ bool PuzzleWord::total_overlap ( T ** coors ) {
 template bool PuzzleWord::total_overlap<int>( int ** coors ); 
 template bool PuzzleWord::total_overlap<bool>( bool ** coors ); 
 
-bool operator < ( PuzzleWord & lhs, PuzzleWord & rhs ) {
-	return lhs.word.size() > rhs.word.size();
+bool PuzzleWord::comp( const PuzzleWord & other ) const {
+	return word.size() > other.word.size();
+}
+
+bool operator < ( const PuzzleWord & lhs, const PuzzleWord & rhs ) {
+	return lhs.comp( rhs );
 }

@@ -19,6 +19,9 @@ void StrandsBoard::allocate() {
 	// and set the length of the first word to zero
 	curr_word_len = 0;
 	used = alloc_2d_arr<bool>( width, height );
+
+	get_words( dictionary, prefix_tree );
+
 }
 
 
@@ -58,13 +61,6 @@ bool StrandsBoard::in_bounds( int x, int y ) {
 	return x >= 0 && x < width && y >= 0 && y < height;
 }
 
-void StrandsBoard::print_solution( ostream & out ) {
-	const char * LINE = "-----------\n";
-	out << LINE;
-	for ( int i = 0; i < words_len; i++ )
-		out << words[i] << "\n\n";
-	out << LINE;
-}
 
 string StrandsBoard::curr_word() {
 	return string( words[ words_len ] );

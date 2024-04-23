@@ -48,36 +48,37 @@ void find_word_start( PuzzleWord & pw, int & startx, int & starty ) {
 }
 
 
-void print_puzzle_word( PuzzleWord & pw ) {
+void print_puzzle_word( PuzzleWord & pw, ostream & out ) {
 	int startx, starty;
-	std::cout << left;
+	out << left;
 	find_word_start( pw, startx, starty );
-	std::cout << setw( 20 ) << pw.word << "starting at (" << startx << ", " << starty << ")\n";
+	out << setw( 20 ) << pw.word << "starting at (" << startx << ", " << starty << ")\n";
 }
 
-void print_words( vector<PuzzleWord> & found_words ) {
+void print_words( vector<PuzzleWord> & found_words, ostream & out ) {
 	for( auto it = found_words.rbegin(); it != found_words.rend(); it++ ) 
-		print_puzzle_word( *it );
+		print_puzzle_word( *it, out );
 }
 
-void print_solutions( vector<PuzzleWord> & found_words, vector<vector<int>> & solutions ) {
+void StrandsBoard::print_solutions( ostream & out ) { 
 	
 	if( solutions.size() == 0 ) {
-		std::cout << "No solutions found\n\n";
+		out << "No solutions found\n\n";
 		return;
 	}
 
 	for( size_t i = 0; i < solutions.size(); i++ ) {
-		std::cout << "Possible solution # " << i << "\n";
+		out << "Possible solution # " << i << "\n";
 		for( auto idx : solutions[i] ) {
 			print_puzzle_word( found_words[idx] );
 		}
-		std::cout << "\n";
+		out << "\n";
 	}
 
 }
 
-void decramble_hint( vector<PuzzleWord> & found_words ) {
+void decramble_hint( StrandsBoard & board ) {
+
 	vector<PuzzleWord> solutions;
 	
 	bool ** coors = alloc_2d_arr<bool>( PuzzleWord::width, PuzzleWord::height, 0 );
@@ -93,7 +94,7 @@ void decramble_hint( vector<PuzzleWord> & found_words ) {
 		}
 	}
 
-	find_hint_matches( found_words, coors, solutions );
+	board.find_hint_matches( coors, solutions );
 
 	std::cout << "Candidates for the hint are: \n";
 	print_words( solutions );
@@ -101,7 +102,7 @@ void decramble_hint( vector<PuzzleWord> & found_words ) {
 
 }
 
-void delete_word( vector<PuzzleWord> & found_words, StrandsBoard & board, string word ) {
+void StrandsBoard::delete_word( string word ) {
 	vector<int> candidate_indicies;
 
 	for( size_t i = 0; i < found_words.size(); i++ )
@@ -132,9 +133,9 @@ void delete_word( vector<PuzzleWord> & found_words, StrandsBoard & board, string
 	} else 
 		choice = 0;
 
-	for( int y = 0; y < board.height; y++ ) 
-		for( int x = 0; x < board.width; x++ ) 
-			if( found_words[ candidate_indicies[choice] ].coordinates[y][x] ) board.used[y][x] = true;
+	for( int y = 0; y < height; y++ ) 
+		for( int x = 0; x < width; x++ ) 
+			if( found_words[ candidate_indicies[choice] ].coordinates[y][x] ) used[y][x] = true;
 
 
 	PuzzleWord pw = found_words[ candidate_indicies[choice] ];
@@ -167,17 +168,9 @@ void menu() {
 
 	std::cout << "\n";
 
-	set<string> dictionary;
-	LetterNode prefix_tree;
-	
-	get_words( dictionary, prefix_tree );
-
 	StrandsBoard board( board_string );
 
-	vector<PuzzleWord> found_words;
-	vector<vector<int>> solutions;
-
-	find_all_words( found_words, board, dictionary, prefix_tree );
+	board.find_all_words();
 
 	int option = -1;
 
@@ -196,20 +189,20 @@ void menu() {
 
 		switch( option ) {
 			case 1:
-				print_words( found_words );
-				std::cout << "\nThere are a total of " << found_words.size() << " possible words left\n\n";
+				print_words( board.found_words );
+				std::cout << "\nThere are a total of " << board.found_words.size() << " possible words left\n\n";
 				break;
 
 			case 2:
 
-				solutions.clear();
-				find_solution_from_words( found_words, board, solutions );
-				print_solutions( found_words, solutions );
+				board.find_solution_from_words( );
+				board.print_solutions( );
 
 				break;
 
 			case 3:
-				decramble_hint( found_words );
+
+				decramble_hint( board );
 				break;
 
 			case 4:
@@ -218,7 +211,7 @@ void menu() {
 				cin >> word_to_delete;
 				std::cout << "\n";
 
-				delete_word( found_words, board, word_to_delete );
+				board.delete_word( word_to_delete );
 				break;
 
 			case 5:

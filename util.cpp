@@ -64,9 +64,9 @@ void get_words( set<string> & words, LetterNode & ln ) {
 		// create a naively spelled plural of a word
 		// even if that does not make sense
 		plural = temp + "s";
-		words.insert( plural );
+		//words.insert( plural );
 		words.insert( temp );
-		ln.insert( plural );
+		//ln.insert( plural );
 		ln.insert( temp );
 	}
 
