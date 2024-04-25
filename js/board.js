@@ -21,6 +21,11 @@ class Board {
 
     static cpp_board;
 
+    static selected_word;
+    static selected_puzzle_word = null;
+
+    static selected_solution;
+
     static set_used() {
         for( let y = 0; y < Board.height; y++ ) {
             for( let x = 0; x < Board.width; x++ ) {
@@ -57,9 +62,10 @@ class Board {
                 char_div.innerHTML = `<p>${board_char.toUpperCase()}</p>`;
 
                 char_div.classList.add( class_list[ nums[y][x] ] );
-
+                
                 if( Board.mode == 2 ) {
-
+                    
+                    char_div.classList.add("hover");
                 
                     char_div.addEventListener("click",e=>{
 
@@ -165,7 +171,7 @@ class Board {
         ];
 
         const display_type = [
-            "flex",
+            "block",
             "block",
             "block",
             "flex"
@@ -202,18 +208,13 @@ class Board {
 
     }
 
-    static selected_word;
 
     static show_word( puzzle_word ) {
-
-        // if( i >= Board.cpp_board.get_found_words_amount() ) return;
-        
-        // let puzzle_word = Board.cpp_board.get_found_word( i );
 
         for( let y = 0; y < Board.height; y++ ) {
             for( let x = 0; x < Board.width; x++ ) {
 
-                Board.solution_nums[y][x] = puzzle_word.get_coordinate( x, y ) > 0 ? 1 : 0;
+                Board.solution_nums[y][x] = (puzzle_word == null || puzzle_word.get_coordinate( x, y ) == 0) ? 0 : 1;
 
             }
         }
@@ -234,7 +235,7 @@ class Board {
 
     static mode_0() {
 
-        const words_div = document.querySelector("#words-menu");
+        const words_div = document.querySelector("#words-list");
 
         words_div.innerHTML = "";
 
@@ -250,6 +251,7 @@ class Board {
             if( i == 0 ) {
                 Board.selected_word = word_div;
                 word_div.classList.add("selected-word");
+                Board.selected_puzzle_word = puzzle_word;
                 Board.show_word( puzzle_word );
             }
 
@@ -260,6 +262,8 @@ class Board {
                 Board.selected_word.classList.remove("selected-word");
 
                 Board.selected_word = e.target;
+
+                Board.selected_puzzle_word = puzzle_word;
 
                 Board.selected_word.classList.add("selected-word");
 
@@ -308,8 +312,6 @@ class Board {
 
     }
 
-    static selected_solution;
-
     static mode_1() {
 
         if( !Board.found_solution )
@@ -337,6 +339,7 @@ class Board {
         let solutions_num = Board.cpp_board.get_solution_amount();
         if( solutions_num == 0 ) {
             solutions_div.innerHTML = "<p>No solutions found.</p>";
+            Board.show_word( null );
         }
 
 
@@ -452,6 +455,36 @@ class Board {
         }
 
         Board.render_board();
+
+    }
+
+    static mark_selected_word_as_used() {
+
+        console.log("hello");
+
+        // we can only mark a word as used in mode 0
+        if( Board.mode != 0 || Board.selected_puzzle_word == null ) return;
+
+        console.log("hello2");
+
+
+        // mark the locations in the selected word as used on the board
+        for( let y = 0; y < Board.height; y++ ) {
+            for( let x = 0; x < Board.width; x++ ) {
+                if( !Board.selected_puzzle_word.get_coordinate( x, y ) ) continue;
+                Board.board_nums[y][x] = 1;
+            }
+        }
+
+        Board.selected_puzzle_word = null;
+
+        // find all of the words remaining
+        Board.set_used();
+        Board.cpp_board.find_all_words();
+
+        // refresh the word list
+        Board.board_changed = true;
+        Board.mode_0();
 
     }
 

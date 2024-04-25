@@ -38,8 +38,15 @@ function INIT_SOLVER () {
     document.querySelector("#descramble_hint_btn").addEventListener("click", ()=>{
         Board.change_mode(3); 
     });
-
+    document.querySelector(".delete-word-btn > p").addEventListener("click", ()=>{
+        Board.mark_selected_word_as_used();
+    });
 
     Board.render_board();
 
 }
+
+window.addEventListener("beforeunload",()=>{
+    Module.destroy( Board.cpp_board );
+    Board.cpp_board = null;
+})

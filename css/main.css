@@ -13,7 +13,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     display: flex;
-    width: auto;
+    width: fill;
     margin: 0;
     padding: 0;
     background-color: var(--back-blue);
@@ -22,7 +22,7 @@ body {
 
 #left_bar {
     width:20%;
-    border-right: 5px solid black;
+    border-left: 5px solid black;
 }
 
 #right_bar {
@@ -39,7 +39,9 @@ body {
 #options_bar {
     margin:10px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    /* max-width: fit-content; */
 }
 
 #options_bar > div {
@@ -135,21 +137,54 @@ body {
 
 }
 
-#words-menu, #hint-menu {
+#words-menu {
     overflow-y: scroll;
     height: 100%;
+}
+
+.delete-word-btn {
+    display: flex;
+    justify-content: center;
+}
+
+
+.delete-word-btn > p {
+    padding:15px;
+    font-size: 15px;
+    border:5px solid black;
+    border-radius: 25px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    user-select: none;
+}
+
+#delete-word-btn > p:hover {
+    cursor: pointer;
+}
+
+#delete-word-btn > p:active {
+    background-color: black;
+    color:white;
+}
+
+
+
+#words-list, #hint-menu {
+    /* overflow-y: scroll;
+    height: 100%; */
     display: flex;
     flex-wrap: wrap;
     user-select: none;
 }
 
-#words-menu > p, #hint-menu > p {
+#words-list > p, #hint-menu > p {
     text-align: center;
     margin:10px;
     font-size: 20px;
 }
 
-#words-menu > p:hover {
+#words-list > p:hover {
     cursor: pointer;
 }
 
@@ -229,4 +264,35 @@ body {
 
 #solutions-menu > div.selected-solution {
     border:5px solid var(--strands-blue);
+}
+
+.hover:hover {
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 800px) {
+
+    #right_bar {
+        flex-shrink: 1;
+        flex-grow: 0;
+    }
+
+    #left_bar {
+        width: auto;
+        border-left: none;
+        border-top: 5px solid black;
+    }
+
+    body {
+        display: block;
+    }
+
+    #board > div {
+        width: 30px;
+        height: 30px;
+        font-size: 25px;
+        border-radius: 50%;
+        margin:2px;
+    }
+
 }

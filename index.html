@@ -16,10 +16,36 @@
         Recursively finding words. This may take a second.
     </p>
 </div>
+<div id="right_bar">
+    <h1 id="title">NYT Strands Solver</h1>
+    <div id="options_bar">
+        <div id="found_words_btn">Found Words</div>
+        <div id="found_solutions_btn">Find Solutions</div>
+        <div id="edit_board_btn" class="selected_option">Edit Board</div>
+        <div id="descramble_hint_btn">Descramble Hint</div>
+    </div>
+    <div id="board">
+        
+    </div>
+</div>
 <div id="left_bar">
     <h2 id="menu-title">Edit Board</h2>
-    <div id="words-menu" style="display: none;"></div>
-    <div id="solutions-menu" style="display: none;"></div>
+    <div id="words-menu" style="display: none;">
+        <div class="delete-word-btn">
+            <p>
+                Mark Used
+            </p>
+        </div>
+        <div id="words-list"></div>
+    </div>
+    <div id="solutions-menu" style="display: none;">
+        <!-- <div class="delete-word-btn">
+            <p>
+                Mark Used
+            </p>
+        </div>
+        <div id="solutions-list"></div> -->
+    </div>
     <div id="edit-menu">
         <textarea rows="8" cols="6" spellcheck="false" id="edit-text"></textarea>
         <button id="edit-set-button" style="display: none;">Set Board</button>
@@ -32,18 +58,6 @@
         </p>
     </div>
     <div id="hint-menu" style="display: none;"></div>
-</div>
-<div id="right_bar">
-    <h1 id="title">NYT Strands Solver</h1>
-    <div id="options_bar">
-        <div id="found_words_btn">Found Words</div>
-        <div id="found_solutions_btn">Find Solutions</div>
-        <div id="edit_board_btn" class="selected_option">Edit Board</div>
-        <div id="descramble_hint_btn">Descramble Hint</div>
-    </div>
-    <div id="board">
-        
-    </div>
 </div>
 </body>
 </html>
