@@ -1,0 +1,37 @@
+
+interface PuzzleWord {
+
+    DOMString get_word();
+    long get_coordinate( long x, long y );
+
+    static attribute long width;
+    static attribute long height;
+
+};
+
+interface StrandsBoard {
+
+    void StrandsBoard();
+    void StrandsBoard( long width, long height );
+    
+    void find_solution_from_words();
+    
+    void find_all_words();
+
+    void set_board( DOMString new_board );
+
+    void set_used( long x, long y, long value );
+    void set_hint_coor( long x, long y, boolean value );
+
+    PuzzleWord get_found_word( long index );
+    long get_found_words_amount();
+
+
+    long get_solution_amount();
+    DOMString get_solution( long index );
+
+    void get_hints();
+    PuzzleWord get_hint( long index );
+	long get_hints_amount();
+
+};
