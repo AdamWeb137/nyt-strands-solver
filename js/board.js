@@ -50,6 +50,10 @@ class Board {
 
         const board = document.querySelector("#board");
 
+        let letter_positions;
+        if( Board.selected_puzzle_word != null )
+            letter_positions = Array( Board.selected_puzzle_word.get_word().length );
+
         board.innerHTML = "";
 
         let class_list = Board.mode >= 2 ? Board.num_classes : Board.word_classes; 
@@ -60,6 +64,10 @@ class Board {
                 let board_char = Board.board_string[ x + Board.width * y ];
                 let char_div = document.createElement("DIV");
                 char_div.innerHTML = `<p>${board_char.toUpperCase()}</p>`;
+
+                if( Board.selected_puzzle_word != null && Board.selected_puzzle_word.get_coordinate( x, y ) != 0 ) {
+                    letter_positions[ Board.selected_puzzle_word.get_coordinate( x, y ) - 1 ] = [x,y];
+                }
 
                 char_div.classList.add( class_list[ nums[y][x] ] );
                 
@@ -100,6 +108,48 @@ class Board {
             }
         }
 
+        // we are done if we are not rendering lines between letters
+        if( Board.selected_puzzle_word == null ) return;
+
+        let board_width = board.offsetWidth;
+        let board_height = board.offsetHeight;
+
+        let letter_width = board_width / Board.width;
+        let letter_height = board_height / Board.height;
+        let svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        
+        svg_el.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+        console.log(svg_el.width);
+
+        svg_el.setAttribute("width", String( board_width ));
+        svg_el.setAttribute("height", String( board_height ));
+
+
+        for( let i = 0; i < letter_positions.length - 1; i++ ) {
+            let line_el = document.createElementNS('http://www.w3.org/2000/svg','line');
+
+            let xpos1 = letter_positions[i][0];
+            let ypos1 = letter_positions[i][1];
+
+            line_el.setAttribute("x1", String( Math.round( xpos1 * letter_width + letter_width / 2.0 ) ));
+            line_el.setAttribute("y1", String( Math.round( ypos1 * letter_height + letter_height / 2.0 ) ));
+
+
+            let xpos2 = letter_positions[i+1][0];
+            let ypos2 = letter_positions[i+1][1];
+
+            line_el.setAttribute("x2", String( Math.round( xpos2 * letter_width + letter_width / 2.0 ) ));
+            line_el.setAttribute("y2", String( Math.round( ypos2 * letter_height + letter_height / 2.0 ) ));
+
+            line_el.setAttribute("stroke","var(--strands-blue)");
+
+            svg_el.appendChild( line_el );
+            
+        }
+        
+        board.appendChild( svg_el );
+
     }
 
     static attempt_edit_board( event ) {
@@ -139,6 +189,8 @@ class Board {
     static change_mode( new_mode ) {
         
         if( new_mode == Board.mode ) return;
+
+        Board.selected_puzzle_word = null;
 
         if( Board.board_changed ) {
             
@@ -363,6 +415,7 @@ class Board {
                 if( i == 0 && j == 0 ) {
                     Board.selected_word = p_child;
                     p_child.classList.add("selected-word");
+                    Board.selected_puzzle_word = puzzle_word;
                     Board.show_word( puzzle_word );
                 }
 
@@ -373,6 +426,8 @@ class Board {
                     Board.selected_word.classList.remove("selected-word");
     
                     Board.selected_word = p_child;
+
+                    Board.selected_puzzle_word = puzzle_word;
     
                     Board.selected_word.classList.add("selected-word");
     

@@ -296,3 +296,13 @@ body {
     }
 
 }
+
+#board > svg {
+    z-index: -1;
+    position: absolute;
+}
+
+svg > line {
+    stroke-width: 10px;
+    stroke:var(--strands-blue);
+}
