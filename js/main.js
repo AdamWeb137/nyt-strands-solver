@@ -38,9 +38,12 @@ function INIT_SOLVER () {
     document.querySelector("#descramble_hint_btn").addEventListener("click", ()=>{
         Board.change_mode(3); 
     });
-    document.querySelector(".delete-word-btn > p").addEventListener("click", ()=>{
-        Board.mark_selected_word_as_used();
-    });
+
+    for( let el of document.querySelectorAll(".delete-word-btn > p")  ) {
+        el.addEventListener("click", Board.mark_selected_word_as_used);
+    }
+
+    document.querySelector("#list-filter").addEventListener("input",Board.filter_words_list);
 
     Board.render_board();
 

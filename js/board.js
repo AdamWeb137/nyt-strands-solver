@@ -26,6 +26,14 @@ class Board {
 
     static selected_solution;
 
+    static clear_solutions_board() {
+        for( let y = 0; y < Board.height; y++ ) {
+            for( let x = 0; x < Board.width; x++ ) {
+                Board.solution_nums[y][x] = 0;
+            }
+        }
+    }
+
     static set_used() {
         for( let y = 0; y < Board.height; y++ ) {
             for( let x = 0; x < Board.width; x++ ) {
@@ -56,8 +64,8 @@ class Board {
 
         board.innerHTML = "";
 
-        let class_list = Board.mode >= 2 ? Board.num_classes : Board.word_classes; 
-        let nums = Board.mode >= 2 ? Board.board_nums : Board.solution_nums;
+        let class_list = Board.mode == 2 ? Board.num_classes : Board.word_classes; 
+        let nums = Board.mode == 2 ? Board.board_nums : Board.solution_nums;
 
         for( let y = 0; y < Board.height; y++ ) {
             for( let x = 0; x < Board.width; x++ ) {
@@ -119,8 +127,6 @@ class Board {
         let svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         
         svg_el.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-
-        console.log(svg_el.width);
 
         svg_el.setAttribute("width", String( board_width ));
         svg_el.setAttribute("height", String( board_height ));
@@ -226,7 +232,7 @@ class Board {
             "block",
             "block",
             "block",
-            "flex"
+            "block"
         ];
 
         const menu_text = [
@@ -294,37 +300,40 @@ class Board {
         let word_num = Board.cpp_board.get_found_words_amount();
         for( let i = 0; i < word_num; i++ ) {
 
-            let word_div = document.createElement("P");
 
-            let puzzle_word = Board.cpp_board.get_found_word( i );
+            Board.create_word_element( words_div, i == 0, Board.cpp_board.get_found_word( i ), 0 );
 
-            word_div.innerHTML = puzzle_word.get_word();
+            // let word_div = document.createElement("P");
 
-            if( i == 0 ) {
-                Board.selected_word = word_div;
-                word_div.classList.add("selected-word");
-                Board.selected_puzzle_word = puzzle_word;
-                Board.show_word( puzzle_word );
-            }
+            // let puzzle_word = Board.cpp_board.get_found_word( i );
 
-            word_div.addEventListener("click",e=>{
+            // word_div.innerHTML = puzzle_word.get_word();
 
-                if( Board.mode != 0 || e.target == Board.selected_word ) return;
+            // if( i == 0 ) {
+            //     Board.selected_word = word_div;
+            //     word_div.classList.add("selected-word");
+            //     Board.selected_puzzle_word = puzzle_word;
+            //     Board.show_word( puzzle_word );
+            // }
 
-                Board.selected_word.classList.remove("selected-word");
+            // word_div.addEventListener("click",e=>{
 
-                Board.selected_word = e.target;
+            //     if( Board.mode != 0 || e.target == Board.selected_word ) return;
 
-                Board.selected_puzzle_word = puzzle_word;
+            //     Board.selected_word.classList.remove("selected-word");
 
-                Board.selected_word.classList.add("selected-word");
+            //     Board.selected_word = e.target;
 
-                Board.show_word( puzzle_word );
+            //     Board.selected_puzzle_word = puzzle_word;
+
+            //     Board.selected_word.classList.add("selected-word");
+
+            //     Board.show_word( puzzle_word );
 
 
-            });
+            // });
 
-            words_div.appendChild(word_div);
+            // words_div.appendChild(word_div);
 
         }
 
@@ -378,19 +387,15 @@ class Board {
 
         Board.hide_warning();
 
-        for( let y = 0; y < Board.height; y++ ) {
-            for( let x = 0; x < Board.width; x++ ) {
-                Board.solution_nums[y][x] = 0;
-            }
-        }
+        Board.clear_solutions_board();
 
-        const solutions_div = document.querySelector("#solutions-menu");
+        const solutions_div = document.querySelector("#solutions-list");
 
         solutions_div.innerHTML = "";
 
         let solutions_num = Board.cpp_board.get_solution_amount();
         if( solutions_num == 0 ) {
-            solutions_div.innerHTML = "<p>No solutions found.</p>";
+            solutions_div.innerHTML = "<p class=\"no-solution\">No solutions found.</p>";
             Board.show_word( null );
         }
 
@@ -401,39 +406,40 @@ class Board {
 
             let solution_indicies = JSON.parse( Board.cpp_board.get_solution(i) );
 
-            console.log(solution_indicies);
-
             for( let j = 0; j < solution_indicies.length; j++ ) {
 
-                let index =  solution_indicies[j];
-                let p_child = document.createElement("P");
-                let puzzle_word = Board.cpp_board.get_found_word( index );
-                p_child.innerText = puzzle_word.get_word();
 
-                sol_div.appendChild( p_child );
+                Board.create_word_element( sol_div, i == 0 && j == 0, Board.cpp_board.get_found_word( solution_indicies[j] ), 1 );
 
-                if( i == 0 && j == 0 ) {
-                    Board.selected_word = p_child;
-                    p_child.classList.add("selected-word");
-                    Board.selected_puzzle_word = puzzle_word;
-                    Board.show_word( puzzle_word );
-                }
+                // let index =  solution_indicies[j];
+                // let p_child = document.createElement("P");
+                // let puzzle_word = Board.cpp_board.get_found_word( index );
+                // p_child.innerText = puzzle_word.get_word();
 
-                p_child.addEventListener("click",e=>{
+                // sol_div.appendChild( p_child );
 
-                    if( Board.mode != 1 || p_child == Board.selected_word ) return;
-    
-                    Board.selected_word.classList.remove("selected-word");
-    
-                    Board.selected_word = p_child;
+                // if( i == 0 && j == 0 ) {
+                //     Board.selected_word = p_child;
+                //     p_child.classList.add("selected-word");
+                //     Board.selected_puzzle_word = puzzle_word;
+                //     Board.show_word( puzzle_word );
+                // }
 
-                    Board.selected_puzzle_word = puzzle_word;
+                // p_child.addEventListener("click",e=>{
+
+                //     if( Board.mode != 1 || p_child == Board.selected_word ) return;
     
-                    Board.selected_word.classList.add("selected-word");
+                //     Board.selected_word.classList.remove("selected-word");
     
-                    Board.show_word( puzzle_word );
+                //     Board.selected_word = p_child;
+
+                //     Board.selected_puzzle_word = puzzle_word;
     
-                });
+                //     Board.selected_word.classList.add("selected-word");
+    
+                //     Board.show_word( puzzle_word );
+    
+                // });
 
             }
 
@@ -475,17 +481,46 @@ class Board {
     }
 
 
+    static create_word_element( parent_element, set_immediately, puzzle_word, current_mode ) {
+
+        let word_div = document.createElement("P");
+
+        word_div.innerHTML = puzzle_word.get_word();
+
+        if( set_immediately ) {
+            Board.selected_word = word_div;
+            word_div.classList.add("selected-word");
+            Board.selected_puzzle_word = puzzle_word;
+            Board.show_word( puzzle_word );
+        }
+
+        word_div.addEventListener("click",e=>{
+
+            if( Board.mode != current_mode || word_div == Board.selected_word ) return;
+
+            Board.selected_word.classList.remove("selected-word");
+
+            Board.selected_word = word_div;
+
+            Board.selected_puzzle_word = puzzle_word;
+
+            Board.selected_word.classList.add("selected-word");
+
+            Board.show_word( puzzle_word );
+
+        });
+
+        parent_element.appendChild(word_div);
+
+    }
+
     static mode_3() {
 
-        const hint_div = document.querySelector("#hint-menu");
+        const hint_div = document.querySelector("#hints-list");
 
         hint_div.innerHTML = "";
 
-        for( let y = 0; y < Board.height; y++ ) {
-            for( let x = 0; x < Board.width; x++ ) {
-                Board.solution_nums[y][x] = 0;
-            }
-        }
+        Board.clear_solutions_board();
 
         if( !Board.found_hint )
             Board.cpp_board.get_hints();
@@ -494,18 +529,12 @@ class Board {
 
         let hint_num = Board.cpp_board.get_hints_amount();
         if( hint_num == 0 ) {
-            hint_div.innerHTML = "<p> No solutions to the hint were found. </p>";
+            hint_div.innerHTML = "<p class=\"no-solution\"> No solutions to the hint were found. </p>";
         }
 
         for( let i = 0; i < hint_num; i++ ) {
 
-            let word_div = document.createElement("P");
-
-            let puzzle_word = Board.cpp_board.get_hint( i );
-
-            word_div.innerHTML = puzzle_word.get_word();
-
-            hint_div.appendChild(word_div);
+            Board.create_word_element( hint_div, i == 0, Board.cpp_board.get_hint( i ), 3 );
 
         }
 
@@ -515,12 +544,8 @@ class Board {
 
     static mark_selected_word_as_used() {
 
-        console.log("hello");
-
-        // we can only mark a word as used in mode 0
-        if( Board.mode != 0 || Board.selected_puzzle_word == null ) return;
-
-        console.log("hello2");
+        // we can only mark a word when we are not in editing mode
+        if( Board.mode == 2 || Board.selected_puzzle_word == null ) return;
 
 
         // mark the locations in the selected word as used on the board
@@ -531,15 +556,55 @@ class Board {
             }
         }
 
+        // set selected_puzzle_word to null as the pointer
+        // will be invalided by the webassembly
         Board.selected_puzzle_word = null;
 
-        // find all of the words remaining
-        Board.set_used();
-        Board.cpp_board.find_all_words();
+        document.querySelector("#list-filter").value = "";
 
         // refresh the word list
         Board.board_changed = true;
-        Board.mode_0();
+
+        // ensure we force a solution to be refound
+        // if we are in the solutions mode
+        Board.found_solution = false;
+
+        // since there is only one hint
+        // when we mark a hint as used
+        // just go back to the edit menu
+        if( Board.mode == 3 ) {
+            Board.change_mode( 2 );
+            return;
+        }
+
+        // find all of the words remaining
+        Board.set_used();
+
+        // only find remaining words in the word list mode
+        // in solutions mode we don't want to invalidate pointers
+        Board.cpp_board.find_all_words();
+
+        // refresh the word list, solutions list, etc
+        // by calling the function that sets it up
+        Board[`mode_${Board.mode}`]();
+
+    }
+
+    static filter_words_list( ) {
+        const words_list = document.querySelector("#words-list");
+        // get the fiter lowercased
+        let filter = document.querySelector("#list-filter").value;
+        filter = filter.toLowerCase();
+
+        for( let child of words_list.children ) {
+            // show a child if the child's word contains the filter as a substring
+            // or if there is no filter
+            if ( filter.length == 0 || child.innerHTML.includes( filter ) ) {
+                child.style.display = "block";
+                continue;
+            } 
+            child.style.display = "none";
+        }
 
     }
 

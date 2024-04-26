@@ -36,15 +36,20 @@
                 Mark Used
             </p>
         </div>
-        <div id="words-list"></div>
+        <input type="text" id="list-filter" placeholder="filter words">
+        <div style="overflow-y: scroll; height: 100%;">
+            <div id="words-list"></div>
+        </div>
     </div>
     <div id="solutions-menu" style="display: none;">
-        <!-- <div class="delete-word-btn">
+        <div class="delete-word-btn">
             <p>
                 Mark Used
             </p>
         </div>
-        <div id="solutions-list"></div> -->
+        <div style="overflow-y: scroll; height: 100%;">
+            <div id="solutions-list"></div>
+        </div>
     </div>
     <div id="edit-menu">
         <textarea rows="8" cols="6" spellcheck="false" id="edit-text"></textarea>
@@ -57,7 +62,14 @@
             a spot as a hint. Click thrice to undo the previous actions.
         </p>
     </div>
-    <div id="hint-menu" style="display: none;"></div>
+    <div id="hint-menu" style="display: none;">
+        <div class="delete-word-btn">
+            <p>
+                Mark Used
+            </p>
+        </div>
+        <div id="hints-list"></div>
+    </div>
 </div>
 </body>
 </html>
