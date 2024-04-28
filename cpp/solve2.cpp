@@ -63,7 +63,8 @@ void StrandsBoard::find_all_words_from_point (
 	// if we are out of bounds or if the word is not a prefix of any known word,
 	// or if the position is already in use in our working word,
 	// we return from the function
-	if ( !in_bounds( x, y ) || used[y][x] || !prefix_tree.contains( word_str ) ) return;
+	if ( !in_bounds( x, y ) || used[y][x] 
+	|| !prefix_tree.contains( word_str ) ) return;
 
 	word_str[ word_len ] = board[y][x];
 	word_len++;
