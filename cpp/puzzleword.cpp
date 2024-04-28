@@ -437,3 +437,34 @@ char * PuzzleWord::get_word() {
 int PuzzleWord::get_coordinate( int x, int y ) {
 	return coordinates[y][x];
 }
+
+
+/** **********************************************************************
+ *  @author Adam Wood
+ *
+ *  @par Description
+ *  Print the path the word takes on the board to some ostream.
+ *
+ *  @param[in,out] out the ostream to print to
+ *
+ *  @par Example
+ *  @verbatim
+
+    std::cout << "There are multiple instances of " << word << " on the board\n\n";
+	for( size_t i = 0; i < candidate_indicies.size(); i++ ) {
+		std::cout << "Location # " << i << "\n";
+		found_words[ candidate_indicies[i] ].print_coors( std::cout );
+		std::cout << "\n";
+	}
+
+    @endverbatim
+************************************************************************/
+void PuzzleWord::print_coors ( ostream & out ) {
+	out << right;
+	for( int y = 0; y < height; y++ ) {
+		for( int x = 0; x < width; x++ ) {
+			out << setw(3) << coordinates[y][x];
+		}
+		out << "\n";
+	}
+}
