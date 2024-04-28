@@ -1,3 +1,8 @@
+/** **********************************************************************
+* @file
+* @brief includes core functions for solving the strands board and finding
+* words on the board.
+*************************************************************************/
 #include "strands.h"
 
 
@@ -5,7 +10,8 @@
  *  @author Adam Wood
  *
  *  @par Description
- *  Finds all english words in a NYT Strands board by recursively
+ *  Finds all english words with at least 4 letters in a NYT Strands 
+ *  board by recursively
  *  finding every valid path on the board and checks if the path corresponds
  *  to a valid english word. If so, the word is added to the found_words
  *  vector. This function is a private function
@@ -119,7 +125,8 @@ void StrandsBoard::find_all_words_from_point (
  *
  *  @par Description
  *  Clears the list of words previously found on the board and
- *  finds all english words in a NYT Strands board by recursively
+ *  finds all english words of at least 4 letters in a NYT Strands 
+ *  board by recursively
  *  finding every valid path on the board and checks if the path corresponds
  *  to a valid english word. If so, the word is added to the found_words
  *  vector. This function is a public function that calls
@@ -130,9 +137,9 @@ void StrandsBoard::find_all_words_from_point (
  *  @verbatim
 
 	vector<string> board_string = {
-		"bee",
-		"cat",
-		"dog"
+		"coke",
+		"soap",
+		"bomb"
 	};
 
 	StrandsBoard board( board_string );
@@ -297,9 +304,9 @@ void StrandsBoard::find_solution_from_words_rec (
  *  @verbatim
 
     vector<string> board_string = {
-		"bee",
-		"cat",
-		"dog"
+		"coke",
+		"soap",
+		"bomb"
 	};
 
 	StrandsBoard board( board_string );
@@ -365,17 +372,17 @@ void StrandsBoard::find_solution_from_words() {
  *  @verbatim
 
     vector<string> board_string = {
-		"bee",
-		"cat",
-		"dog"
+		"coke",
+		"soap",
+		"bomb"
 	};
 
 	StrandsBoard board( board_string );
 
-	bool hint_coors[3][3] = {
-		{1,0,0},
-		{0,1,1},
-		{0,0,0}
+	bool hint_coors[3][4] = {
+		{1,0,0,0},
+		{0,1,0,0},
+		{0,0,1,1}
 	};
 
 	vector<PuzzleWord> matching;
