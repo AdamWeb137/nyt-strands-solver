@@ -1,6 +1,6 @@
 /** **********************************************************************
 * @file
-* @brief contains StrandsBoard functions
+* @brief contains StrandsBoard implementation.
 *************************************************************************/
 #include "strands.h"
 
@@ -59,9 +59,8 @@ void StrandsBoard::allocate() {
  *  @par Description
  *  Constructs a StrandsBoard with a given width and height
  *
- *  @param[in] width the width of the strands board
- *  @param[in] height the width of the strands board
- *  int.
+ *  @param[in] w the width of the strands board
+ *  @param[in] h the width of the strands board
  *
  *  @par Example
  *  @verbatim
@@ -205,14 +204,6 @@ string StrandsBoard::curr_word() {
  *  @param[in] y the y position.
  *
  *  @returns a scalar representing the original (x,y) position
- *
- *  @par Example
- *  @verbatim
-
-    int new_width = 
-	get_valid_int( "Enter a new board width: ", "Please enter a number." );
-
-    @endverbatim
 ************************************************************************/
 int StrandsBoard::linearize_coor( int x, int y ) {
 	return x + width * y;
@@ -236,7 +227,8 @@ int StrandsBoard::linearize_coor( int x, int y ) {
 	// coke
 	// soap
 	// bomb
-	board.set_board( "cokesoapbomb" );
+	char * board_str = "cokesoapbomb"
+	board.set_board( board_str );
 
     @endverbatim
 ************************************************************************/

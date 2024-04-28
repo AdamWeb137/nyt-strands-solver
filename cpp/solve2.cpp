@@ -367,7 +367,6 @@ void StrandsBoard::find_solution_from_words() {
  *  @param[out] matching a vector of words (PuzzleWords) that the hint could
  *  be.
  *
- *  @returns the grayscale value as a pixel
  *
  *  @par Example
  *  @verbatim

@@ -10,6 +10,8 @@
  *  @par Description
  *  Runs automatically upon running strands.o or strands.exe. Currently
  *  just wraps the menu function.
+ *
+ *  @returns 0 if the program ran succesfully.
 ************************************************************************/
 int main ( ) {
 
@@ -29,7 +31,7 @@ int main ( ) {
  *  @param[in] error_message a string to print when the user inputs an invalid
  *  int.
  *
- *  @returns the grayscale value as a pixel
+ *  @returns the user inputted int.
  *
  *  @par Example
  *  @verbatim
@@ -68,7 +70,7 @@ int get_valid_int( const char * prompt_message, const char * error_message ) {
  *
  *  @param[out] result the int to put the user input in
 
- *  @returns wether the user inputted a valid int.
+ *  @returns true if a valid int was inputted, false otherwise.
  *
  *  @par Example
  *  @verbatim
@@ -92,9 +94,8 @@ bool attempt_valid_int( int & result ) {
  *  @author Adam Wood
  *
  *  @par Description
- *  Attempts to get the letters of a NYT Strands board from the user
- *  given a width and height. A board is valid if it is the proper width
- *  and height.
+ *  Attempts to get a character reprentation of the Strands board. A board
+ *  representation is valid if has dimensions of width by height.
  *
  *  @param[out] board_string a 2d array of characters that will represent
  *  the strands board.
@@ -187,8 +188,7 @@ void print_puzzle_word( PuzzleWord & pw, ostream & out ) {
  *  @author Adam Wood
  *
  *  @par Description
- *  Print all of the words in a vector to some ostream. The words are
- *  printed in ascending order.
+ *  Print all of the words in a vector to some ostream.
  *
  *  @param[in] found_words the vector of words to print
  *  @param[in,out] out the ostream to print to

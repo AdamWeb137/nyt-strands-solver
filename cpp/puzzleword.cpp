@@ -107,9 +107,9 @@ PuzzleWord::PuzzleWord( PuzzleWord & other ) {
  *
  *  @par Description
  *  Moves the word and coordinate of a puzzle word into another word. The 
- *  original puzzle word no longer contains the original data.
+ *  moved puzzle word no longer contains the original data.
  *
- *  @param[in,out] other the puzzleword to move data into.
+ *  @param[in,out] other the puzzleword to move data from.
  *
  *  @par Example
  *  @verbatim
@@ -124,7 +124,7 @@ PuzzleWord::PuzzleWord( PuzzleWord & other ) {
 
 	PuzzleWord bomb;
 
-	temp.move( bomb );
+	bomb.move( temp );
 
     @endverbatim
 ************************************************************************/
@@ -139,7 +139,7 @@ void PuzzleWord::move( PuzzleWord & other ) {
  *  @author Adam Wood
  *
  *  @par Description
- *  Move constructor for the PuzzleWord strcut.
+ *  Move constructor for the PuzzleWord struct.
  *
  *  @param[in,out] other the puzzleword to move data to.
 ************************************************************************/
@@ -231,7 +231,7 @@ PuzzleWord& PuzzleWord::operator=(PuzzleWord& other) {
  *
  *  @param[in,out] other the puzzleword to assign from.
  *
- *  @returns a reference to the move puzzle word.
+ *  @returns a reference to the puzzle word the data moved to.
 ************************************************************************/
 PuzzleWord& PuzzleWord::operator=(PuzzleWord&& other) {
 	if( this != &other )

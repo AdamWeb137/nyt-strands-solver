@@ -39,10 +39,8 @@ int LetterNode::char_to_index( char c ) {
  *  Returns the child node corresponding to the character c.
  *
  *  @param[in] c the character to index.
- *  @param[in] green the green part of the color
- *  @param[in] blue the blue part of the color
  *
- *  @returns the grayscale value as a pixel
+ *  @returns a reference to a child node.
  *
  *  @par Example
  *  @verbatim
@@ -174,8 +172,6 @@ void LetterNode::insert( string word ) {
  *
  *  @param[out] words the set of strings to add words to.
  *  @param[out] ln the LetterNode prefix tree to add words to.
- *
- *  @returns the grayscale value as a pixel
  *
  *  @par Example
  *  @verbatim

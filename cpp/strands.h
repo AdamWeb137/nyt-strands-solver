@@ -26,11 +26,20 @@ T ** alloc_2d_arr( int width, int height, T fill = 0 );
 template <typename T>
 void free_2d( T * * & ptr );
 
+/** **********************************************************************
+*  @brief
+*  Minimum length of a possible solution word.
+************************************************************************/
 const int MIN_WORD_LEN = 4;
 
 struct PuzzleWord;
 struct LetterNode;
 
+/** **********************************************************************
+*  @brief
+*  Number of nodes that a LetterNode can hold. One for each latin letter
+*  and one extra.
+************************************************************************/
 #define LETTER_NODE_MAX 27
 
 /** **********************************************************************
@@ -68,6 +77,7 @@ struct PuzzleWord {
 
 	inline static int width;
     /**< Width of the Strands board. */
+
 	inline static int height;
     /**< Height of the strands board. */
 
@@ -128,10 +138,10 @@ class StrandsBoard {
     	/**< Text of the strands board. */
 
 		bool ** used;
-    	/**< 2d tracking what letters have been used already. */
+    	/**< A 2d array tracking what letters have been used already. */
 
 		bool ** hint_coors;
-    	/**< 2d array representing which letters are in a hint */
+    	/**< A 2d array representing which letters are in a hint. */
 
 		LetterNode prefix_tree;
     	/**< Prefix tree of all english words with a length of at least 4 and
@@ -148,8 +158,8 @@ class StrandsBoard {
 
 
 		vector<vector<int>> solutions;
-    	/**< Vector of vectors of ints representing a list of indecies to words
-		that solutions to the puzzle. */
+    	/**< Vector of vectors of ints representing a list of indicies to words
+		that are solutions to the puzzle. */
 
 		vector<PuzzleWord> possible_hints;
     	/**< Vector of words that match a hint. */
@@ -197,19 +207,19 @@ class StrandsBoard {
     	/**< Height of the Strands board. */
 
 		string json_holder;
-    	/**< JSON representation of a solution for interacting with js */
+    	/**< JSON representation of a solution for interacting with JS. */
 
 		char ** words;
     	/**< List of words in a solution. Not used. */
 
 		int words_len;
-    	/**< Number of words in the words array. Not used */
+    	/**< Number of words in the words array. Not used. */
 
 		int curr_word_len;
     	/**< Length of the last word in the working solution. Not used.  */
 
 		int max_words = 9;
-    	/**< Maximum number of words in a solution */
+    	/**< Maximum number of words in a solution. */
 
 
 		void find_all_words_from_point( char * word_str, int ** coors, set<string> & already_found, int x, int y, int word_len ); 
@@ -232,15 +242,6 @@ void solve_strands_old_word( StrandsBoard & board, set<string> & words, LetterNo
 
 
 void get_words( set<string> & words, LetterNode & ln );
-
-// solve2.cpp approach
-void find_all_words_from_point( StrandsBoard & board, set<string> & dictionary, char * word_str, int ** coors, set<string> & already_found, int x, int y, int word_len = 0 );
-
-void find_all_words( StrandsBoard & board );
-
-void find_solution_from_words( StrandsBoard & board );
-
-void find_solution_from_words_rec( StrandsBoard & board, vector<int> & indicies, int total_chars, int & depth, int max_depth = 0 );
 
 // main helpers
 int get_valid_int( const char * prompt_message, const char * error_message );
